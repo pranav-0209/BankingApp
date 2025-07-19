@@ -6,13 +6,11 @@ import com.banking_application.bank.app.account.service.AccountService;
 import com.banking_application.bank.app.user.repository.UserRepository;
 import com.banking_application.bank.app.user.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -31,9 +29,9 @@ public class AccountController {
 
 
     @PostMapping// or remove if your SecurityConfig already restricts access
-    public ResponseEntity<AccountResponseDTO> createAccount (
+    public ResponseEntity<AccountResponseDTO> createAccount(
             @RequestBody @Valid AccountRequestDTO requestDTO) {
-            org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //            if (authentication == null || !authentication.isAuthenticated()) {
 //                try {
 //                    throw new AccessDeniedException("You must be authenticated to create an account.");
@@ -41,17 +39,39 @@ public class AccountController {
 //                    throw new RuntimeException(e);
 //                }
 //            }
-            String username = authentication.getName();
-            AccountResponseDTO responseDTO = accountService.createAccount(requestDTO, username);
-            return ResponseEntity.ok(responseDTO);
+        String username = authentication.getName();
+        AccountResponseDTO responseDTO = accountService.createAccount(requestDTO, username);
+        return ResponseEntity.ok(responseDTO);
     }
 
 
     @GetMapping
-    public ResponseEntity<List<AccountResponseDTO>> getUserAccounts(Authentication authentication){
+    public ResponseEntity<List<AccountResponseDTO>> getUserAccounts(Authentication authentication) {
         String username = authentication.getName();
         List<AccountResponseDTO> accounts = accountService.getAccountsForAuthenticatedUser(username);
         return ResponseEntity.ok(accounts);
     }
+
+    @GetMapping("/{accountNumber}")
+    public ResponseEntity<AccountResponseDTO> getAccountDetails(@PathVariable String accountNumber, Authentication authentication) {
+        String username = authentication.getName();
+        AccountResponseDTO dto = accountService.getAccountDetails(username, accountNumber);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/balance/{accountNumber}")
+    public ResponseEntity<Double> getAccountBalance(@PathVariable String accountNumber, Authentication authentication) {
+        String username = authentication.getName();
+        Double balance = accountService.getAccountBalance(accountNumber, username);
+        return ResponseEntity.ok(balance);
+    }
+
+    @DeleteMapping("/{accountNumber}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable String accountNumber, Authentication authentication) {
+        String username = authentication.getName();
+        accountService.deleteAccount(accountNumber, username);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+    }
+
 
 }

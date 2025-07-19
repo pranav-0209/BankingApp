@@ -7,11 +7,10 @@ import com.banking_application.bank.app.account.model.Account;
 import com.banking_application.bank.app.account.repository.AccountRepository;
 import com.banking_application.bank.app.user.model.User;
 import com.banking_application.bank.app.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import jakarta.validation.Valid;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public AccountResponseDTO createAccount(AccountRequestDTO requestDTO,String authenticatedUsername){
+    public AccountResponseDTO createAccount(AccountRequestDTO requestDTO, String authenticatedUsername) {
         User user = userRepository.findByName(authenticatedUsername);
 
         Account acc = AccountMapper.toEntity(requestDTO, user);
@@ -46,7 +45,7 @@ public class AccountService {
     }
 
 
-    public List<AccountResponseDTO> getAccountsForAuthenticatedUser(String username){
+    public List<AccountResponseDTO> getAccountsForAuthenticatedUser(String username) {
 
         User user = userRepository.findByName(username);
         List<Account> accounts = accountRepository.findByUser(user);
@@ -61,9 +60,48 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    @SneakyThrows
+    public AccountResponseDTO getAccountDetails(String username, String accountNumber) {
+
+        Account account = accountRepository.findByAccountNumber(accountNumber);
+
+        if (!account.getUser().getName().equals(username)) {
+            throw new AccessDeniedException("You are not authorized to delete this account.");
+        }
+
+        return AccountMapper.toResponseDto(account);
+    }
+
+    public List<AccountResponseDTO> getAllAccounts() {
+        return accountRepository.findAll().stream()
+                .map(AccountMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    public Double getAccountBalance(String accountNumber, String username) {
+
+        Account account = accountRepository.findByAccountNumber(accountNumber);
+
+        if (!account.getUser().getName().equals(username)) {
+            throw new AccessDeniedException("You are not authorized to delete this account.");
+        }
+
+        return account.getBalance();
+    }
 
 
+    @SneakyThrows
+    public void deleteAccount(String accountNumber, String username) {
 
+        Account account = accountRepository.findByAccountNumber(accountNumber);
+
+        if (!account.getUser().getName().equals(username)) {
+            throw new AccessDeniedException("You are not authorized to delete this account.");
+        }
+
+        accountRepository.deleteById(account.getAid());
+    }
 
 
 }

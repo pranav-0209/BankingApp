@@ -1,5 +1,7 @@
 package com.banking_application.bank.app.user.controller;
 
+import com.banking_application.bank.app.account.dto.AccountResponseDTO;
+import com.banking_application.bank.app.account.service.AccountService;
 import com.banking_application.bank.app.user.dto.UserRequestDTO;
 import com.banking_application.bank.app.user.dto.UserResponseDTO;
 import com.banking_application.bank.app.user.service.UserService;
@@ -14,11 +16,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-@RequiredArgsConstructor
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+    private final AccountService accountService;
+
+    public AdminController(UserService userService, AccountService accountService) {
+        this.userService = userService;
+        this.accountService = accountService;
+    }
 
     @PostMapping("/create-admin-user")
     @PreAuthorize("hasRole('ADMIN')")
@@ -37,6 +44,17 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/all-accounts")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
+        List<AccountResponseDTO> accountResponseDTOS = accountService.getAllAccounts();
+
+        if (accountResponseDTOS == null || accountResponseDTOS.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(accountResponseDTOS, HttpStatus.OK);
     }
 
 
