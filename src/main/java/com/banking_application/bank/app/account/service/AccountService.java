@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -42,6 +44,24 @@ public class AccountService {
 
         return AccountMapper.toResponseDto(savedAccount);
     }
+
+
+    public List<AccountResponseDTO> getAccountsForAuthenticatedUser(String username){
+
+        User user = userRepository.findByName(username);
+        List<Account> accounts = accountRepository.findByUser(user);
+        return accounts.stream()
+                .map(account -> new AccountResponseDTO(
+                        account.getAccountNumber(),
+                        account.getAccountType(),
+                        account.getBalance(),
+                        account.getUser().getName(),
+                        account.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 
 
 

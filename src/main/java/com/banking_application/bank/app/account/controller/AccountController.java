@@ -8,13 +8,12 @@ import com.banking_application.bank.app.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -35,17 +34,24 @@ public class AccountController {
     public ResponseEntity<AccountResponseDTO> createAccount (
             @RequestBody @Valid AccountRequestDTO requestDTO) {
             org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                try {
-                    throw new AccessDeniedException("You must be authenticated to create an account.");
-                } catch (AccessDeniedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+//            if (authentication == null || !authentication.isAuthenticated()) {
+//                try {
+//                    throw new AccessDeniedException("You must be authenticated to create an account.");
+//                } catch (AccessDeniedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
             String username = authentication.getName();
             AccountResponseDTO responseDTO = accountService.createAccount(requestDTO, username);
             return ResponseEntity.ok(responseDTO);
     }
 
+
+    @GetMapping
+    public ResponseEntity<List<AccountResponseDTO>> getUserAccounts(Authentication authentication){
+        String username = authentication.getName();
+        List<AccountResponseDTO> accounts = accountService.getAccountsForAuthenticatedUser(username);
+        return ResponseEntity.ok(accounts);
+    }
 
 }
