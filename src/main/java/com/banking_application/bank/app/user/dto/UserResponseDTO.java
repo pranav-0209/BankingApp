@@ -6,7 +6,7 @@ import java.util.Set;
 
 
 public record UserResponseDTO(
-        long id,
+        long Uid,
         String name,
         String email,
         String phoneNumber,

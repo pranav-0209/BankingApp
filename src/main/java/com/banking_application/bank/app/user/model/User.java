@@ -10,14 +10,13 @@ import java.util.Set;
 
 @Entity
 @Data
-
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private long Uid;
 
     private String name;
     private String email;

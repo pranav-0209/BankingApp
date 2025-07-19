@@ -45,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         ) {
             // Add a custom method to get the user ID
             public Long getUserId() {
-                return user.getId();
+                return user.getUid();
             }
         };
 

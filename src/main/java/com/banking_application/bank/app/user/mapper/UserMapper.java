@@ -3,7 +3,9 @@ package com.banking_application.bank.app.user.mapper;
 import com.banking_application.bank.app.user.dto.UserRequestDTO;
 import com.banking_application.bank.app.user.dto.UserResponseDTO;
 import com.banking_application.bank.app.user.model.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
     // Convert UserRequestDTO to User entity
@@ -20,7 +22,7 @@ public class UserMapper {
     // Convert User entity to UserResponseDTO
     public static UserResponseDTO toDTO(User user){
         return new UserResponseDTO(
-                user.getId(),
+                user.getUid(),
                 user.getName(),
                 user.getEmail(),
                 user.getPhoneNumber(),

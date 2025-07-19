@@ -2,7 +2,6 @@ package com.banking_application.bank.app.user.controller;
 
 import com.banking_application.bank.app.user.dto.UserRequestDTO;
 import com.banking_application.bank.app.user.dto.UserResponseDTO;
-import com.banking_application.bank.app.user.model.User;
 import com.banking_application.bank.app.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
