@@ -24,8 +24,15 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_account_id", nullable = false)
     private Account fromAccount;
-    
+
+    @Column(name = "from_account_number_str", nullable = false)
+    private String fromAccountNumber;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_account_id")
+    @JoinColumn(name = "to_account_id", nullable = true)
     private Account toAccount;
+
+    @Column(name = "to_account_number_str", nullable = true) // Add this field
+    private String toAccountNumber;
+
 }
