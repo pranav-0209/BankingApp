@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +22,14 @@ public class AdminController {
 
     private final UserService userService;
     private final AccountService accountService;
+    private final UserDetailsService userDetailsService;
 
-    public AdminController(UserService userService, AccountService accountService) {
+    public AdminController(UserService userService, AccountService accountService, UserDetailsService userDetailsService) {
         this.userService = userService;
         this.accountService = accountService;
+        this.userDetailsService = userDetailsService;
     }
+
 
     @PostMapping("/create-admin-user")
     @PreAuthorize("hasRole('ADMIN')")
