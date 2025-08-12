@@ -4,18 +4,14 @@ import com.banking_application.bank.app.jwt.JwtUtil;
 import com.banking_application.bank.app.user.dto.AuthRequestDTO;
 import com.banking_application.bank.app.user.dto.AuthResponseDTO;
 import com.banking_application.bank.app.user.dto.UserRequestDTO;
-import com.banking_application.bank.app.user.model.User;
-import com.banking_application.bank.app.user.service.UserDetailsServiceImpl;
 import com.banking_application.bank.app.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +32,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody @Valid UserRequestDTO dto){
+    public ResponseEntity<?> register(@RequestBody @Valid UserRequestDTO dto) {
         userService.registerUser(dto);
         return ResponseEntity.ok("User registered successfully");
     }
@@ -45,20 +41,22 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> createAuthenticationToken(
             @Valid @RequestBody AuthRequestDTO authRequest) throws Exception {
 
-        try {
-            // Authenticate the user using Spring Security's AuthenticationManager
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
-        }
-
+//        try {
+//            // Authenticate the user using Spring Security's AuthenticationManager
+////            Authentication authentication = authenticationManager.authenticate(
+////                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+//            );
+//        } catch (BadCredentialsException e) {
+//            throw new Exception("Incorrect username or password", e);
+//        }
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+        );
         // If authentication is successful, load UserDetails
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+//        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
 
         // Generate JWT token
-        final String jwt = jwtUtil.generateToken(userDetails);
+        final String jwt = jwtUtil.generateToken((UserDetails) authentication.getPrincipal());
 
         // Return the token in the response DTO
         return ResponseEntity.ok(new AuthResponseDTO(jwt));

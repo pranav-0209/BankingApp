@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("transaction")
 public class TransactionControlller {
@@ -56,6 +58,12 @@ public class TransactionControlller {
 
         TransactionResponseDTO responseDTO = transactionService.transfer(username, requestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TransactionResponseDTO>> getAllTransactions() {
+        List<TransactionResponseDTO> transactions = transactionService.getAllTransactionsForCurrentUser();
+        return ResponseEntity.ok(transactions);
     }
 
 }
