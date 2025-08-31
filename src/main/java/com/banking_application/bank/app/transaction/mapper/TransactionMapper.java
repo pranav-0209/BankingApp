@@ -17,6 +17,7 @@ public class TransactionMapper {
         transaction.setFromAccountNumber(fromAccount.getAccountNumber());
         transaction.setAmount(requestDTO.getAmount());
         transaction.setTimestamp(LocalDateTime.now());
+        transaction.setTransactionType(requestDTO.getTransactionType());
 
         if (toAccount != null) {
             transaction.setToAccount(toAccount);

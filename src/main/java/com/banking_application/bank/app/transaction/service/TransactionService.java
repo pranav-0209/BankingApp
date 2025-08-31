@@ -10,6 +10,7 @@ import com.banking_application.bank.app.transaction.model.Transaction;
 import com.banking_application.bank.app.transaction.repository.TransactionRepository;
 import com.banking_application.bank.app.user.model.User;
 import com.banking_application.bank.app.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +38,7 @@ public class TransactionService {
 
 
     @SneakyThrows
+    @Transactional
     public TransactionResponseDTO deposit(String username, TransactionRequestDTO dto) {
 
         Account account = accountRepository.findByAccountNumber(dto.getAccount());
@@ -57,11 +59,12 @@ public class TransactionService {
 
 
     @SneakyThrows
+    @Transactional
     public TransactionResponseDTO withdraw(String username, TransactionRequestDTO dto) {
 
         Account account = accountRepository.findByAccountNumber(dto.getAccount());
         if (!account.getUser().getName().equals(username)) {
-            throw new AccessDeniedException("You are not authorized to deposit into this account.");
+            throw new AccessDeniedException("You are not authorized to withdraw from this account.");
         }
         account.setBalance(account.getBalance() - dto.getAmount());
         accountRepository.save(account);
@@ -76,6 +79,7 @@ public class TransactionService {
     }
 
     @SneakyThrows
+    @Transactional
     public TransactionResponseDTO transfer(String username, TransactionRequestDTO requestDTO) {
         // Source account (fromAccountNumber in DTO)
         Account fromAccount = accountRepository.findByAccountNumber(requestDTO.getAccount());

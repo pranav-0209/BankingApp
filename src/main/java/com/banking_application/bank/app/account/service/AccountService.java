@@ -36,7 +36,16 @@ public class AccountService {
 
         Account account = accountRepository.save(acc);
 
-        String accountNumber = String.valueOf(100_000_000L + account.getAid());
+        String accountNumber;
+        if ("SAVINGS".equalsIgnoreCase(requestDTO.getAccountType())) {
+            accountNumber = "1" + String.format("%09d", account.getAid());
+        } else if ("CURRENT".equalsIgnoreCase(requestDTO.getAccountType())) {
+            accountNumber = "2" + String.format("%09d", account.getAid());
+        } else {
+            // Fallback for any other account types
+            accountNumber = "9" + String.format("%09d", account.getAid());
+        }
+
         account.setAccountNumber(accountNumber);
 
         Account savedAccount = accountRepository.save(account);
