@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthController {
 
-
     private final UserService userService;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;

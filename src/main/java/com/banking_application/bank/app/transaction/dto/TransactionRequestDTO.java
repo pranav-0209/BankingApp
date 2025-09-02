@@ -1,15 +1,10 @@
 package com.banking_application.bank.app.transaction.dto;
 
-import com.banking_application.bank.app.account.model.Account;
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

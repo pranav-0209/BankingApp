@@ -2,7 +2,6 @@ package com.banking_application.bank.app.transaction.controller;
 
 import com.banking_application.bank.app.transaction.dto.TransactionRequestDTO;
 import com.banking_application.bank.app.transaction.dto.TransactionResponseDTO;
-import com.banking_application.bank.app.transaction.model.Transaction;
 import com.banking_application.bank.app.transaction.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("transaction")
+@RequestMapping("/transaction")
 public class TransactionControlller {
 
     private final TransactionService transactionService;
@@ -22,7 +21,6 @@ public class TransactionControlller {
     public TransactionControlller(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
-
 
     @PostMapping("/deposit")
     @PreAuthorize("isAuthenticated()") // Only authenticated users can perform deposits

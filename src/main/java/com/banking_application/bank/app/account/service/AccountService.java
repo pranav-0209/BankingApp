@@ -7,6 +7,7 @@ import com.banking_application.bank.app.account.model.Account;
 import com.banking_application.bank.app.account.repository.AccountRepository;
 import com.banking_application.bank.app.user.model.User;
 import com.banking_application.bank.app.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public AccountResponseDTO createAccount(AccountRequestDTO requestDTO, String authenticatedUsername) {
         User user = userRepository.findByName(authenticatedUsername);
 
@@ -52,7 +54,6 @@ public class AccountService {
 
         return AccountMapper.toResponseDto(savedAccount);
     }
-
 
     public List<AccountResponseDTO> getAccountsForAuthenticatedUser(String username) {
 
@@ -99,8 +100,8 @@ public class AccountService {
         return account.getBalance();
     }
 
-
     @SneakyThrows
+    @Transactional
     public void deleteAccount(String accountNumber, String username) {
 
         Account account = accountRepository.findByAccountNumber(accountNumber);
@@ -111,6 +112,5 @@ public class AccountService {
 
         accountRepository.deleteById(account.getAid());
     }
-
 
 }

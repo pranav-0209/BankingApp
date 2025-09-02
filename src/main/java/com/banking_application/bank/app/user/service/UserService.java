@@ -24,14 +24,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User registerUser(UserRequestDTO dto){
+    public User registerUser(UserRequestDTO dto) {
         // Map DTO to Entity
         User user = UserMapper.toEntity(dto);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Set default role if not already provided
-        if(user.getRoles() == null || user.getRoles().isEmpty()){
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(Set.of(Role.CUSTOMER));
         }
         user.setCreatedAt(LocalDateTime.now());
@@ -39,7 +39,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserResponseDTO getUserById(Long id){
+    public UserResponseDTO getUserById(Long id) {
         User user = userRepository
                 .findById(id)
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
@@ -47,19 +47,18 @@ public class UserService {
         return UserMapper.toDTO(user);
     }
 
-    public void deleteUser(Long id){
-        if(!userRepository.existsById(id)){
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
             throw new RuntimeException("User with ID " + id + " not found for deletion.");
         }
         userRepository.deleteById(id);
     }
 
-    public User findByUserName(String username){
+    public User findByUserName(String username) {
         return userRepository.findByName(username);
     }
 
-
-    public void saveAdmin(UserRequestDTO dto){
+    public void saveAdmin(UserRequestDTO dto) {
         // Map DTO to Entity
         User user = UserMapper.toEntity(dto);
 
@@ -99,6 +98,5 @@ public class UserService {
 
         return UserMapper.toDTO(updatedUser);
     }
-
 
 }

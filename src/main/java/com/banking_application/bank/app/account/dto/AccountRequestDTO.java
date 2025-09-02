@@ -1,6 +1,5 @@
 package com.banking_application.bank.app.account.dto;
 
-
 import com.banking_application.bank.app.user.model.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -17,4 +16,5 @@ public class AccountRequestDTO {
 
     @NotNull(message = "Initial balance is required")
     private double balance;
+
 }

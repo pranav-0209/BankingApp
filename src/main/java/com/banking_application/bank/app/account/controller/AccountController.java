@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -28,7 +27,6 @@ public class AccountController {
         this.userRepository = userRepository;
     }
 
-
     @PostMapping// or remove if your SecurityConfig already restricts access
     public ResponseEntity<AccountResponseDTO> createAccount(
             @RequestBody @Valid AccountRequestDTO requestDTO) {
@@ -44,7 +42,6 @@ public class AccountController {
         AccountResponseDTO responseDTO = accountService.createAccount(requestDTO, username);
         return ResponseEntity.ok(responseDTO);
     }
-
 
     @GetMapping
     public ResponseEntity<List<AccountResponseDTO>> getUserAccounts(Authentication authentication) {
@@ -73,6 +70,5 @@ public class AccountController {
         accountService.deleteAccount(accountNumber, username);
         return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
-
 
 }

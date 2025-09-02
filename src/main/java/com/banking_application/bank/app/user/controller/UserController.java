@@ -2,8 +2,6 @@ package com.banking_application.bank.app.user.controller;
 
 import com.banking_application.bank.app.user.dto.UserRequestDTO;
 import com.banking_application.bank.app.user.dto.UserResponseDTO;
-import com.banking_application.bank.app.user.mapper.UserMapper;
-import com.banking_application.bank.app.user.model.User;
 import com.banking_application.bank.app.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,12 +35,11 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.userId or hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable("id") Long id,
-                                                      @RequestBody @Valid UserRequestDTO requestDTO){
+                                                      @RequestBody @Valid UserRequestDTO requestDTO) {
 
         UserResponseDTO updatedUser = userService.updateUser(id, requestDTO);
 
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
-
 
 }

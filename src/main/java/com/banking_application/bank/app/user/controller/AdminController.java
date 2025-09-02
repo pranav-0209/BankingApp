@@ -5,8 +5,6 @@ import com.banking_application.bank.app.account.service.AccountService;
 import com.banking_application.bank.app.user.dto.UserRequestDTO;
 import com.banking_application.bank.app.user.dto.UserResponseDTO;
 import com.banking_application.bank.app.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,14 +28,12 @@ public class AdminController {
         this.userDetailsService = userDetailsService;
     }
 
-
     @PostMapping("/create-admin-user")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> createAdmin(@RequestBody UserRequestDTO userRequestDTO) {
         userService.saveAdmin(userRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
 
     @GetMapping("/all-users")
     @PreAuthorize("hasRole('ADMIN')")
@@ -60,8 +56,5 @@ public class AdminController {
         }
         return new ResponseEntity<>(accountResponseDTOS, HttpStatus.OK);
     }
-
-
-
 
 }
